@@ -1,6 +1,6 @@
- import { promises as fs } from 'node:fs';
+import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { BotData, UserData } from './bot.js';
+import { BotData, Habit, UserData } from './bot.js';
 
 const DB_PATH = path.resolve(process.cwd(), 'habits.json');
 
@@ -32,4 +32,13 @@ export async function saveUserData(userId: number | string, userData: UserData):
   const id = String(userId);
   dataCache[id] = userData;
   await saveData();
+}
+
+export function getToday(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
+export function hasCompletedToday(habit: Habit): boolean {
+  const today = getToday();
+  return habit.history.includes(today);
 }
